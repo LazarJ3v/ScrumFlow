@@ -14,6 +14,13 @@ export interface User {
     role: UserRole;
 }
 
+export interface UserMinimal {
+    id: string;
+    firstName: string;
+    lastName: string;
+    avatar?: string;
+}
+
 export enum UserRole {
     PRODUCT_OWNER = 'PRODUCT_OWNER',
     SCRUM_MASTER = 'SCRUM_MASTER',
