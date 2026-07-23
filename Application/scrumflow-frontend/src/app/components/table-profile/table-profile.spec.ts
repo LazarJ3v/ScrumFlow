@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TaskCardProfile } from './task-card-profile';
+import { TableProfile } from './table-profile';
 
-describe('TaskCardProfile', () => {
-  let component: TaskCardProfile;
-  let fixture: ComponentFixture<TaskCardProfile>;
+describe('TableProfile', () => {
+  let component: TableProfile;
+  let fixture: ComponentFixture<TableProfile>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [],
+      imports: [TableProfile],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(TaskCardProfile);
+    fixture = TestBed.createComponent(TableProfile);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

@@ -1,0 +1,125 @@
+<!-- table-profile.html -->
+
+<div class="board">
+
+  <!-- ═══ SPRINT HEADER ═══ -->
+  <div class="board__header">
+
+    <div class="board__header-top">
+      <div class="board__sprint-info">
+        <span class="board__live-dot"></span>
+        <h2 class="board__sprint-name">{{ table().sprintName }}</h2>
+        <span class="board__sprint-goal">"{{ table().sprintGoal }}"</span>
+      </div>
+
+      <div class="board__dates">
+        {{ table().startDate | date: 'dd MMM' }} — {{ table().endDate | date: 'dd MMM' }}
+        <span class="board__days-remaining">· {{ table().daysRemaining }} dana preostalo</span>
+      </div>
+    </div>
+
+    <div class="board__header-bottom">
+
+      <!-- PROGRESS BAR -->
+      <div class="board__progress-wrap">
+        <div class="board__progress-bar">
+          <div
+            class="board__progress-fill"
+            [style.width.%]="progressPercent()">
+          </div>
+        </div>
+        <span class="board__progress-label">
+          {{ table().completedStoryPoints }} / {{ table().totalStoryPoints }} SP
+        </span>
+      </div>
+
+      <!-- ONLINE CLANOVI -->
+      <div class="board__members">
+        @for (member of table().onlineMembers.slice(0, 4); track member.id) {
+          <div class="board__avatar" [title]="member.firstName + ' ' + member.lastName">
+            @if (member.avatar) {
+              <img [src]="member.avatar" [alt]="member.firstName" />
+            } @else {
+              {{ member.firstName[0] }}{{ member.lastName[0] }}
+            }
+          </div>
+        }
+        @if (table().onlineMembers.length > 4) {
+          <div class="board__avatar board__avatar--more">
+            +{{ table().onlineMembers.length - 4 }}
+          </div>
+        }
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══ KOLONE ═══ -->
+  <div class="board__columns">
+
+    <!-- TO DO -->
+    <div class="board__column">
+      <div class="board__column-header board__column-header--todo">
+        <span class="board__column-title">To Do</span>
+        <span class="board__column-count">{{ todoTasks().length }}</span>
+      </div>
+      <div class="board__column-body">
+        @for (task of todoTasks(); track task.id) {
+          <app-task-card-profile [taskCardMinimal]="task" />
+        }
+        @if (todoTasks().length === 0) {
+          <div class="board__empty">Nema taskova</div>
+        }
+      </div>
+    </div>
+
+    <!-- IN PROGRESS -->
+    <div class="board__column">
+      <div class="board__column-header board__column-header--progress">
+        <span class="board__column-title">In Progress</span>
+        <span class="board__column-count">{{ inProgressTasks().length }}</span>
+      </div>
+      <div class="board__column-body">
+        @for (task of inProgressTasks(); track task.id) {
+          <app-task-card-profile [taskCardMinimal]="task" />
+        }
+        @if (inProgressTasks().length === 0) {
+          <div class="board__empty">Nema taskova</div>
+        }
+      </div>
+    </div>
+
+    <!-- REVIEW -->
+    <div class="board__column">
+      <div class="board__column-header board__column-header--review">
+        <span class="board__column-title">Review</span>
+        <span class="board__column-count">{{ reviewTasks().length }}</span>
+      </div>
+      <div class="board__column-body">
+        @for (task of reviewTasks(); track task.id) {
+          <app-task-card-profile [taskCardMinimal]="task" />
+        }
+        @if (reviewTasks().length === 0) {
+          <div class="board__empty">Nema taskova</div>
+        }
+      </div>
+    </div>
+
+    <!-- DONE -->
+    <div class="board__column">
+      <div class="board__column-header board__column-header--done">
+        <span class="board__column-title">Done</span>
+        <span class="board__column-count">{{ doneTasks().length }}</span>
+      </div>
+      <div class="board__column-body">
+        @for (task of doneTasks(); track task.id) {
+          <app-task-card-profile [taskCardMinimal]="task" />
+        }
+        @if (doneTasks().length === 0) {
+          <div class="board__empty">Nema taskova</div>
+        }
+      </div>
+    </div>
+
+  </div>
+</div>

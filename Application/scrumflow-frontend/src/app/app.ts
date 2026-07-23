@@ -1,10 +1,10 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { TaskCardProfile } from './components/task-card-profile/task-card-profile';
+import { TableProfile } from './components/table-profile/table-profile';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, TaskCardProfile],
+  imports: [RouterOutlet, TableProfile],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

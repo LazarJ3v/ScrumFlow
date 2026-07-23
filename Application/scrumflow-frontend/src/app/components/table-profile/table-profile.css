@@ -1,0 +1,233 @@
+/* table-profile.css */
+
+.board {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  background: #f4f6f9;
+  border-radius: 12px;
+  overflow: hidden;
+  font-family: inherit;
+}
+
+/* ═══ HEADER ═══ */
+.board__header {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 20px;
+  background: #1a1a2e;
+  border-bottom: 3px solid #4f8ef7;
+  flex-shrink: 0;
+}
+
+.board__header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.board__sprint-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+/* Zelena pulsujuca tacka — live indikator */
+.board__live-dot {
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6); }
+  70%  { box-shadow: 0 0 0 7px rgba(16, 185, 129, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+.board__sprint-name {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+  white-space: nowrap;
+}
+
+.board__sprint-goal {
+  font-size: 13px;
+  color: #94a3b8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.board__dates {
+  font-size: 12px;
+  color: #94a3b8;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.board__days-remaining {
+  color: #4f8ef7;
+  font-weight: 600;
+}
+
+.board__header-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+/* PROGRESS BAR */
+.board__progress-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.board__progress-bar {
+  flex: 1;
+  height: 6px;
+  background: #2d3748;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.board__progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4f8ef7, #10b981);
+  border-radius: 10px;
+  transition: width 0.4s ease;
+}
+
+.board__progress-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #cbd5e1;
+  white-space: nowrap;
+}
+
+/* ONLINE CLANOVI */
+.board__members {
+  display: flex;
+  align-items: center;
+}
+
+.board__avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #4f8ef7;
+  border: 2px solid #1a1a2e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: white;
+  margin-left: -6px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+
+.board__avatar:first-child { margin-left: 0; }
+
+.board__avatar:hover { transform: scale(1.15); z-index: 1; }
+
+.board__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.board__avatar--more {
+  background: #2d3748;
+  color: #94a3b8;
+  font-size: 9px;
+}
+
+/* ═══ KOLONE ═══ */
+.board__columns {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  padding: 16px;
+  flex: 1;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.board__column {
+  display: flex;
+  flex-direction: column;
+  background: #edf0f5;
+  border-radius: 10px;
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* COLUMN HEADERS */
+.board__column-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  flex-shrink: 0;
+}
+
+.board__column-header--todo     { background: #e2e8f0; }
+.board__column-header--progress { background: #dbeafe; }
+.board__column-header--review   { background: #fef3c7; }
+.board__column-header--done     { background: #dcfce7; }
+
+.board__column-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #475569;
+}
+
+.board__column-count {
+  font-size: 11px;
+  font-weight: 700;
+  background: rgba(0,0,0,0.08);
+  color: #475569;
+  padding: 1px 7px;
+  border-radius: 10px;
+}
+
+/* COLUMN BODY — scrollable */
+.board__column-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.board__column-body::-webkit-scrollbar       { width: 4px; }
+.board__column-body::-webkit-scrollbar-track { background: transparent; }
+.board__column-body::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+
+/* EMPTY STATE */
+.board__empty {
+  text-align: center;
+  font-size: 12px;
+  color: #cbd5e1;
+  padding: 24px 0;
+}

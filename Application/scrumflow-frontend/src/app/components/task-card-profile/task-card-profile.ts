@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import { Priority, TaskCardMinimal, TaskStatus } from '../../models/task-card.model';
 import { DatePipe } from '@angular/common';
 
@@ -22,10 +22,10 @@ export class TaskCardProfile {
     dueDate: new Date()
   }
 
-  taskCardMinimal = signal<TaskCardMinimal>(this.defaultCard);
+  taskCardMinimal = input.required<TaskCardMinimal>();
 
   isOverdue = computed(() => {
-    const due = this.taskCardMinimal().dueDate;
+    const due = this.taskCardMinimal()?.dueDate;
     return due ? new Date(due) < new Date() : false;
   });
 }
