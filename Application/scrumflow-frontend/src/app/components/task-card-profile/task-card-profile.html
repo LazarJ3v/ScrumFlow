@@ -1,0 +1,44 @@
+<!-- task-card-profile.html -->
+
+<div class="task-card" [attr.data-priority]="taskCardMinimal().priority" [attr.data-status]="taskCardMinimal().status">
+
+  <!-- TOP ROW: priority bar je css, ovde status + due date -->
+  <div class="task-card__header">
+    <span class="task-card__status">{{ taskCardMinimal().status }}</span>
+    @if (taskCardMinimal().dueDate) {
+      <span class="task-card__due" [class.task-card__due--overdue]="isOverdue()">
+        {{ taskCardMinimal().dueDate | date: 'dd MMM' }}
+      </span>
+    }
+  </div>
+
+  <!-- NASLOV -->
+  <p class="task-card__title">{{ taskCardMinimal().title }}</p>
+
+  <!-- BACKLOG ITEM -->
+  <p class="task-card__story">{{ taskCardMinimal().backlogItemTitle }}</p>
+
+  <!-- DIVIDER -->
+  <div class="task-card__divider"></div>
+
+  <!-- FOOTER: meta info + story points -->
+  <div class="task-card__footer">
+    <div class="task-card__meta">
+      <span class="task-card__meta-item">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+        {{ taskCardMinimal().commentsCount }}
+      </span>
+      <span class="task-card__meta-item">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
+        </svg>
+        {{ taskCardMinimal().attachmentsCount }}
+      </span>
+    </div>
+
+    <span class="task-card__points">{{ taskCardMinimal().storyPoints }} SP</span>
+  </div>
+
+</div>

@@ -28,6 +28,7 @@ export interface TaskCardMinimal {
     backlogItemTitle: string;
     backlogItemId: string;
     status: TaskStatus;
+    priority: Priority;
     storyPoints: number;
     assignee?: UserMinimal;
     commentsCount: number;
