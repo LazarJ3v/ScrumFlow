@@ -1,38 +1,33 @@
-import { createReducer, on } from "@ngrx/store";
-import { Priority, TaskCardMinimal, TaskStatus } from "../../models/task-card.model";
-import { loadTasks, loadTasksFail, loadTasksSuccess } from "./task.actions";
+import { createFeatureSelector, createReducer, createSelector, on } from "@ngrx/store";
+import { TaskCardMinimal } from "../../models/task-card.model";
+import { loadTasksSuccess } from "./task.actions";
+import { createEntityAdapter, EntityState } from "@ngrx/entity";
 
-export interface TaskCardState {
-    tasks: TaskCardMinimal[];
-    loading: boolean;
-    error: string | null;
+export interface TasksList extends EntityState<TaskCardMinimal> {
+    selectedTaskId: string | null;
 }
 
-export const initialState: TaskCardState = {
-    tasks: [],
-    loading: false,
-    error: null
-}
+const adapter = createEntityAdapter({
+    selectId: (t: TaskCardMinimal) => t.id
+});
+
+export const initialState = adapter.getInitialState({
+    selectedTaskId: null
+});
 
 export const taskReducer = createReducer(
     initialState,
+    on(loadTasksSuccess, (state, { tasks }) => adapter.addMany(tasks, state))
+);
 
-    on(loadTasks, (state, { size, page }) => ({
-        ...state,
-        loading: true,
-        error: null
-    })),
+export const selectTasks = createFeatureSelector<TasksList>('tasks');
 
-    on(loadTasksSuccess, (state, { tasks }) => ({
-        ...state,
-        tasks,
-        loading: false,
-        error: null
-    })),
+export const selectAllTasks = createSelector(selectTasks, adapter.getSelectors().selectAll);
 
-    on(loadTasksFail, (state, { message }) => ({
-        ...state,
-        loading: false,
-        error: message
-    }))
-)
+export const selectCurrentTask = createSelector(
+    selectTasks,
+    selectAllTasks,
+    (state, tasks) => {
+        return tasks.filter((task) => task.id === state.selectedTaskId)[0];
+    }
+);
