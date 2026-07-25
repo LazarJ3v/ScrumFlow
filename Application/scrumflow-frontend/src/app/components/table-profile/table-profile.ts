@@ -1,8 +1,12 @@
-import { Component, computed, input, signal } from '@angular/core';
+import { Component, computed, inject, input, OnInit, signal } from '@angular/core';
 import { TableHeader } from '../../models/table-header';
 import { TaskCardProfile } from '../task-card-profile/task-card-profile';
-import { Priority, TaskCardMinimal, TaskStatus } from '../../models/task-card.model';
+import { TaskCardMinimal, TaskStatus } from '../../models/task-card.model';
 import { DatePipe } from '@angular/common';
+import { Store } from '@ngrx/store';
+import { loadTasks } from '../../store/task/task.actions';
+import { selectAllTasks } from '../../store/task/task.reducer';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-table-profile',
@@ -10,7 +14,9 @@ import { DatePipe } from '@angular/common';
   templateUrl: './table-profile.html',
   styleUrl: './table-profile.css',
 })
-export class TableProfile {
+export class TableProfile implements OnInit {
+
+  private store = inject(Store);
 
   defaultHeader: TableHeader = {
     sprintName: 'Sprint 3',
@@ -26,32 +32,9 @@ export class TableProfile {
   table = signal<TableHeader>(this.defaultHeader);
 
   // Svi taskovi — u produkciji ce doci iz NgRx store-a / servisa
-  tasks = input<TaskCardMinimal[]>([
-    {
-      id: '1',
-      title: 'default1',
-      backlogItemTitle: 'default1',
-      backlogItemId: '0',
-      status: TaskStatus.TO_DO,
-      priority: Priority.LOW,
-      storyPoints: 5,
-      commentsCount: 0,
-      attachmentsCount: 0,
-      dueDate: new Date()
-    },
-    {
-      id: '2',
-      title: 'default2',
-      backlogItemTitle: 'default2',
-      backlogItemId: '0',
-      status: TaskStatus.IN_PROGRESS,
-      priority: Priority.HIGH,
-      storyPoints: 4,
-      commentsCount: 0,
-      attachmentsCount: 0,
-      dueDate: new Date()
-    }
-  ]);
+  tasks$ = this.store.select(selectAllTasks);
+
+  tasks = toSignal(this.tasks$, { initialValue: [] as TaskCardMinimal[] });
 
   // Computed po kolonama
   todoTasks = computed(() => this.tasks().filter(t => t.status === TaskStatus.TO_DO));
@@ -65,4 +48,9 @@ export class TableProfile {
     if (totalStoryPoints === 0) return 0;
     return Math.round((completedStoryPoints / totalStoryPoints) * 100);
   });
+
+  ngOnInit(): void {
+    this.store.dispatch(loadTasks());
+  }
+
 }

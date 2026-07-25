@@ -3,7 +3,7 @@ import { TaskCardMinimal } from "../../models/task-card.model";
 
 export const loadTasks = createAction(
     '[Task Card Profile Component]: Load tasks',
-    props<{ size: number, page: number }>()
+    //props<{ size: number, page: number }>()
 );
 
 export const loadTasksSuccess = createAction(
