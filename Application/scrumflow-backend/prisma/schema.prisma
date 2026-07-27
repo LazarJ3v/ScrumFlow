@@ -1,0 +1,319 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ═══════════════════════════════════════════════════════
+// USER
+// ═══════════════════════════════════════════════════════
+model User {
+  id           Int       @id @default(autoincrement())
+  firstName    String
+  lastName     String
+  email        String    @unique
+  avatar       String?
+  passwordHash String
+  role         UserRole
+  isActive     Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  lastLoginAt  DateTime?
+
+  // Relacije
+  assignedTasks       Task[]           @relation("TaskAssignee")
+  createdTasks        Task[]           @relation("TaskCreatedBy")
+  comments            Comment[]
+  teamMembers         TeamMember[]
+  ownedProjects       Project[]        @relation("ProjectOwner")
+  scrumMasterSprints  Sprint[]         @relation("SprintScrumMaster")
+  createdBacklogItems BacklogItem[]    @relation("BacklogItemCreatedBy")
+  standupEntries      StandupEntry[]
+  createdStandups     StandupSession[] @relation("StandupCreatedBy")
+  planningPokerVotes  PlanningPokerVote[]
+  notifications       Notification[]
+}
+
+// ═══════════════════════════════════════════════════════
+// PROJECT
+// ═══════════════════════════════════════════════════════
+model Project {
+  id          Int           @id @default(autoincrement())
+  name        String
+  description String?
+  status      ProjectStatus @default(ACTIVE)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  // Relacije
+  productOwnerId Int
+  productOwner   User @relation("ProjectOwner", fields: [productOwnerId], references: [id])
+
+  teamMembers  TeamMember[]
+  backlogItems BacklogItem[]
+  sprints      Sprint[]
+}
+
+model TeamMember {
+  id       Int      @id @default(autoincrement())
+  joinedAt DateTime @default(now())
+
+  projectId Int
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  @@unique([projectId, userId])
+}
+
+// ═══════════════════════════════════════════════════════
+// BACKLOG
+// ═══════════════════════════════════════════════════════
+model BacklogItem {
+  id                 Int               @id @default(autoincrement())
+  title              String
+  description        String?
+  acceptanceCriteria String?
+  storyPoints        Int               @default(0)
+  priority           TaskPriority      @default(MEDIUM)
+  status             BacklogItemStatus @default(DRAFT)
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+
+  // Relacije
+  projectId Int
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  createdById Int
+  createdBy   User @relation("BacklogItemCreatedBy", fields: [createdById], references: [id])
+
+  tasks                 Task[]
+  planningPokerSessions PlanningPokerSession[]
+}
+
+// ═══════════════════════════════════════════════════════
+// SPRINT
+// ═══════════════════════════════════════════════════════
+model Sprint {
+  id        Int          @id @default(autoincrement())
+  name      String
+  goal      String?
+  startDate DateTime
+  endDate   DateTime
+  status    SprintStatus @default(PLANNING)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  // Relacije
+  projectId Int
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  scrumMasterId Int
+  scrumMaster   User @relation("SprintScrumMaster", fields: [scrumMasterId], references: [id])
+
+  tasks                 Task[]
+  standupSessions       StandupSession[]
+  planningPokerSessions PlanningPokerSession[]
+}
+
+// ═══════════════════════════════════════════════════════
+// TASK
+// ═══════════════════════════════════════════════════════
+model Task {
+  id               Int          @id @default(autoincrement())
+  title            String
+  description      String?
+  status           TaskStatus   @default(TO_DO)
+  priority         TaskPriority @default(MEDIUM)
+  storyPoints      Int          @default(0)
+  isBlocked        Boolean      @default(false)
+  blockedReason    String?
+  commentsCount    Int          @default(0)
+  attachmentsCount Int          @default(0)
+  dueDate          DateTime?
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  // Relacije
+  assigneeId Int?
+  assignee   User? @relation("TaskAssignee", fields: [assigneeId], references: [id])
+
+  createdById Int
+  createdBy   User @relation("TaskCreatedBy", fields: [createdById], references: [id])
+
+  backlogItemId Int
+  backlogItem   BacklogItem @relation(fields: [backlogItemId], references: [id])
+
+  sprintId Int?
+  sprint   Sprint? @relation(fields: [sprintId], references: [id])
+
+  subtasks Subtask[]
+  comments Comment[]
+}
+
+model Subtask {
+  id          Int      @id @default(autoincrement())
+  title       String
+  isCompleted Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  taskId Int
+  task   Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  taskId Int
+  task   Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  authorId Int
+  author   User @relation(fields: [authorId], references: [id])
+}
+
+// ═══════════════════════════════════════════════════════
+// STANDUP
+// ═══════════════════════════════════════════════════════
+model StandupSession {
+  id        Int      @id @default(autoincrement())
+  date      DateTime @default(now())
+  createdAt DateTime @default(now())
+
+  sprintId Int
+  sprint   Sprint @relation(fields: [sprintId], references: [id], onDelete: Cascade)
+
+  createdById Int
+  createdBy   User @relation("StandupCreatedBy", fields: [createdById], references: [id])
+
+  entries StandupEntry[]
+}
+
+model StandupEntry {
+  id              Int      @id @default(autoincrement())
+  durationSeconds Int      @default(0)
+  wasInterrupted  Boolean  @default(false)
+  createdAt       DateTime @default(now())
+
+  standupSessionId Int
+  standupSession   StandupSession @relation(fields: [standupSessionId], references: [id], onDelete: Cascade)
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+}
+
+// ═══════════════════════════════════════════════════════
+// PLANNING POKER
+// ═══════════════════════════════════════════════════════
+model PlanningPokerSession {
+  id          Int                @id @default(autoincrement())
+  status      PokerSessionStatus @default(VOTING)
+  finalPoints Int?
+  createdAt   DateTime           @default(now())
+
+  sprintId Int
+  sprint   Sprint @relation(fields: [sprintId], references: [id], onDelete: Cascade)
+
+  backlogItemId Int
+  backlogItem   BacklogItem @relation(fields: [backlogItemId], references: [id])
+
+  votes PlanningPokerVote[]
+}
+
+model PlanningPokerVote {
+  id          Int      @id @default(autoincrement())
+  storyPoints Int
+  submittedAt DateTime @default(now())
+
+  sessionId Int
+  session   PlanningPokerSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  @@unique([sessionId, userId])
+}
+
+// ═══════════════════════════════════════════════════════
+// NOTIFICATION
+// ═══════════════════════════════════════════════════════
+model Notification {
+  id        Int                @id @default(autoincrement())
+  type      String
+  message   String
+  status    NotificationStatus @default(UNREAD)
+  createdAt DateTime           @default(now())
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ═══════════════════════════════════════════════════════
+// ENUMERACIJE
+// ═══════════════════════════════════════════════════════
+enum UserRole {
+  PRODUCT_OWNER
+  SCRUM_MASTER
+  DEVELOPER
+  CLIENT
+  ADMIN
+}
+
+enum TaskStatus {
+  TO_DO
+  IN_PROGRESS
+  REVIEW
+  DONE
+}
+
+enum TaskPriority {
+  CRITICAL
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum BacklogItemStatus {
+  DRAFT
+  READY
+  IN_SPRINT
+  DONE
+  CANCELLED
+}
+
+enum SprintStatus {
+  PLANNING
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum PokerSessionStatus {
+  VOTING
+  REVEALED
+  CONSENSUS
+  REOPENED
+}
+
+enum NotificationStatus {
+  UNREAD
+  READ
+  DISMISSED
+}
+
+enum ProjectStatus {
+  ACTIVE
+  ARCHIVED
+}
