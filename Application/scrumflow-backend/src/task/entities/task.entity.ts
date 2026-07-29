@@ -1,4 +1,4 @@
-import { TaskPriority, TaskStatus } from "../enums/task.enum";
+import { Priority, TaskStatus } from "../enums/task.enum";
 
 export class Task {
     id: string;
@@ -7,7 +7,7 @@ export class Task {
     backlogItemId: string;
     status: TaskStatus;
     storyPoints: number;
-    priority: TaskPriority;
+    priority: Priority;
     assigneeId: number;
     isBlocked: boolean;
     blockedReason?: string;

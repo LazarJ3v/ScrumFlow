@@ -1,26 +1,40 @@
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { Task, Prisma } from 'generated/prisma/client';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 
 @Injectable()
 export class TaskService {
-  create(createTaskDto: CreateTaskDto) {
-    return 'This action adds a new task';
+  constructor(private prisma: PrismaService) {
+
   }
 
-  findAll() {
-    return `This action returns all task`;
+  async create(data: Prisma.TaskCreateInput) {
+    return this.prisma.task.create({ data });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} task`;
+  async findAll(params: {
+    skip?: number,
+    take?: number,
+    cursor?: Prisma.TaskWhereUniqueInput,
+    where?: Prisma.TaskWhereInput,
+    orderBy?: Prisma.TaskOrderByWithRelationInput
+  }): Promise<Task[]> {
+    const { skip, take, cursor, where, orderBy } = params;
+    return this.prisma.task.findMany({ skip, take, cursor, where, orderBy });
   }
 
-  update(id: number, updateTaskDto: UpdateTaskDto) {
-    return `This action updates a #${id} task`;
+  async findOne(query: Prisma.TaskWhereUniqueInput): Promise<Task> {
+    return this.prisma.task.findUnique({ where: query });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} task`;
+  async update(params: { data: Prisma.TaskUpdateInput, where: Prisma.TaskWhereUniqueInput }): Promise<Task> {
+    const { data, where } = params;
+    return this.prisma.task.update({ data, where });
+  }
+
+  remove(query: Prisma.TaskWhereUniqueInput) {
+    return this.prisma.task.delete({where: query});
   }
 }
