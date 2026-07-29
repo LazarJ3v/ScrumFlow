@@ -1,4 +1,4 @@
-import { Priority, TaskStatus } from "../enums/task.enum";
+import { TaskPriority, TaskStatus } from "../enums/task.enum";
 
 export class Task {
     id: string;

@@ -8,8 +8,8 @@ export class TaskController {
   constructor(private readonly taskService: TaskService) { }
 
   @Post()
-  create(@Body() dto: CreateTaskDto) {
-    return this.taskService.create(dto);
+  create(@Body() createTaskDto: CreateTaskDto) {
+    return this.taskService.create(createTaskDto);
   }
 
   @Get()
@@ -25,16 +25,16 @@ export class TaskController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.taskService.findOne({id: Number(id)});
+    return this.taskService.findOne({ id: Number(id) });
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
-    return this.taskService.update({data: updateTaskDto, where: {id: Number(id)}});
+    return this.taskService.update({ data: updateTaskDto, where: { id: Number(id) } });
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.taskService.remove({id: Number(id)});
+    return this.taskService.remove({ id: Number(id) });
   }
 }
