@@ -9,12 +9,7 @@ export class TaskController {
 
   @Post()
   create(@Body() dto: CreateTaskDto) {
-    const data = {
-      ...dto,
-      createdBy: {connect: {id: dto.createdById}},
-      backlogItem: {connect: {id: dto.backlogItemId}}
-    }
-    return this.taskService.create(data);
+    return this.taskService.create(dto);
   }
 
   @Get()
@@ -29,17 +24,17 @@ export class TaskController {
   }
 
   @Get(':id')
-  findOne(@Query('id') id: string) {
+  findOne(@Param('id') id: string) {
     return this.taskService.findOne({id: Number(id)});
   }
 
   @Patch(':id')
-  update(@Query('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
+  update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
     return this.taskService.update({data: updateTaskDto, where: {id: Number(id)}});
   }
 
   @Delete(':id')
-  remove(@Query('id') id: string) {
+  remove(@Param('id') id: string) {
     return this.taskService.remove({id: Number(id)});
   }
 }

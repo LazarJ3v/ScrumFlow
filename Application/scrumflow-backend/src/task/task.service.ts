@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Task, Prisma } from 'generated/prisma/client';
-import { CreateTaskDto } from './dto/create-task.dto';
-import { UpdateTaskDto } from './dto/update-task.dto';
 
 @Injectable()
 export class TaskService {
@@ -10,7 +8,7 @@ export class TaskService {
 
   }
 
-  async create(data: Prisma.TaskCreateInput) {
+  async create(data: Prisma.TaskUncheckedCreateInput) {
     return this.prisma.task.create({ data });
   }
 
@@ -29,7 +27,7 @@ export class TaskService {
     return this.prisma.task.findUnique({ where: query });
   }
 
-  async update(params: { data: Prisma.TaskUpdateInput, where: Prisma.TaskWhereUniqueInput }): Promise<Task> {
+  async update(params: { data: Prisma.TaskUncheckedUpdateInput, where: Prisma.TaskWhereUniqueInput }): Promise<Task> {
     const { data, where } = params;
     return this.prisma.task.update({ data, where });
   }
