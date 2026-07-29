@@ -16,5 +16,5 @@ export class CreateTaskDto {
     backlogItemTitle: string;
     sprintName: string;
     assigneeId: number;
-    createdById: number
+    createdById: number;
 }

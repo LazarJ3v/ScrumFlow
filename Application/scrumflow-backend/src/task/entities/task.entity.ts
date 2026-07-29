@@ -3,21 +3,19 @@ import { Priority, TaskStatus } from "../enums/task.enum";
 export class Task {
     id: string;
     title: string;
-    backlogItemTitle: string;
-    backlogItemId: string;
+    description: string;
     status: TaskStatus;
+    priority: TaskPriority;
     storyPoints: number;
-    priority: Priority;
-    assigneeId: number;
     isBlocked: boolean;
     blockedReason?: string;
-    subtasks: {
-        total: number;
-        completed: number;
-    };
     commentsCount: number;
     attachmentsCount: number;
-    timeLogged: number;
     dueDate?: Date;
-    labels?: string[];
+    createdAt: Date;
+    updatedAt: Date;
+    backlogItemTitle: string;
+    sprintName: string;
+    assigneeId: number;
+    createdById: number;
 }
