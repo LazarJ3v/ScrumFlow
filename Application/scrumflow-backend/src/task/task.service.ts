@@ -4,9 +4,7 @@ import { Task, Prisma } from 'generated/prisma/client';
 
 @Injectable()
 export class TaskService {
-  constructor(private prisma: PrismaService) {
-
-  }
+  constructor(private prisma: PrismaService) { }
 
   async create(data: Prisma.TaskUncheckedCreateInput) {
     return this.prisma.task.create({ data });
@@ -33,6 +31,6 @@ export class TaskService {
   }
 
   remove(query: Prisma.TaskWhereUniqueInput) {
-    return this.prisma.task.delete({where: query});
+    return this.prisma.task.delete({ where: query });
   }
 }

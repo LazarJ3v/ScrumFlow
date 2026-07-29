@@ -1,0 +1,7 @@
+export enum UserRole {
+    PRODUCT_OWNER = 'PRODUCT_OWNER',
+    SCRUM_MASTER = 'SCRUM_MASTER',
+    DEVELOPER = 'DEVELOPER',
+    CLIENT = 'CLIENT',
+    ADMIN = 'ADMIN'
+}
