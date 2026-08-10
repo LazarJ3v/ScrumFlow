@@ -1,35 +1,45 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { UserService } from 'src/user/user.service';
-import { LoginDto } from './dto/login.dto';
+import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
-    constructor(private userService: UserService) { }
+    constructor(private userService: UserService, private jwtService: JwtService) { }
 
     async validateUser(email: string, password: string): Promise<any> {
         const user = await this.userService.findOne({ email });
         //ovde treba hesirati password i uporediti sa user.passwordHash
-        if (user && user.passwordHash === password) {
-            const { passwordHash, ...result } = user;
-            return result;
+        if (user) {
+            const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
+            if (isPasswordValid) {
+                const { passwordHash, ...result } = user;
+                return result;
+            }
         }
         return null;
     }
 
-    async loginUser(dto: LoginDto): Promise<any> {
-        return await this.validateUser(dto.email, dto.password);
+    async loginUser(user: any): Promise<any> {
+        const payload = {
+            sub: user.id,
+            email: user.email,
+            role: user.role,
+        };
+        return {
+            access_token: this.jwtService.sign(payload)
+        }
     }
 
     async registerUser(dto: CreateUserDto): Promise<any> {
-        const email = dto.email;
-        const checkUser = await this.userService.findOne({ email });
+        const checkUser = await this.userService.findOne({ email: dto.email });
         if (checkUser) {
             return null;
         }
         //ovde treba hesirati password iz dto-a
-        const realPasswordHash = dto.passwordHash;
-        dto.passwordHash = realPasswordHash;
-        return await this.userService.create(dto);
+        const realPasswordHash = await bcrypt.hash(dto.passwordHash, 20);
+        const user = await this.userService.create({...dto, passwordHash: realPasswordHash});
+        return this.loginUser(user);
     }
 }
