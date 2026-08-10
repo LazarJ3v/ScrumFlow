@@ -9,6 +9,6 @@ export class CreateUserDto {
     role: UserRole;
     isActive: boolean;
     createdAt: Date;
-    updatedAt: Date
-    lastLoginAt: Date
+    updatedAt: Date;
+    lastLoginAt: Date;
 }
