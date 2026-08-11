@@ -1,10 +1,10 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { TableProfile } from './components/table-profile/table-profile';
+import { LandingPage } from './pages/landing-page/landing-page';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, TableProfile],
+  imports: [RouterOutlet, LandingPage],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
