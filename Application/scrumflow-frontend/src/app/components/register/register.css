@@ -44,6 +44,10 @@
   margin-bottom: 28px;
 }
 
+.register-logo:hover {
+    cursor: pointer;
+}
+
 .logo-dot {
   width: 8px; height: 8px;
   border-radius: 50%;

@@ -47,7 +47,7 @@ export class Register {
       firstName: this.firstName(),
       lastName: this.lastName(),
       email: this.email(),
-      passwordHash: this.password(),
+      password: this.password(),
       role: this.role(),
     }).subscribe({
       next: () => {

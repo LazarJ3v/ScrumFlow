@@ -1,5 +1,5 @@
 import { HttpClient } from "@angular/common/http";
-import { inject, Injectable } from "@angular/core";
+import { inject, Injectable, signal } from "@angular/core";
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -14,9 +14,13 @@ export class AuthService {
         firstName: string;
         lastName: string;
         email: string;
-        passwordHash: string;
+        password: string;
         role: string;
     }) {
         return this.http.post(`${this.apiUrl}/register`, data);
     }
+
+    // logout(){
+
+    // }
 }
