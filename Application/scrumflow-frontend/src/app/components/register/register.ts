@@ -1,7 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
-import { AuthService } from '../../core/auth/auth.service';
-import { Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { Store } from '@ngrx/store';
+import * as AuthAction from "../../store/auth/auth.actions";
 
 @Component({
   selector: 'app-register',
@@ -10,8 +11,7 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './register.css',
 })
 export class Register {
-  private authService = inject(AuthService);
-  private router = inject(Router);
+  private store = inject(Store);
 
   firstName = signal('');
   lastName = signal('');
@@ -35,31 +35,30 @@ export class Register {
   toggleConfirmPassword() { this.showConfirmPassword.set(!this.showConfirmPassword()); }
 
   onSubmit() {
+    console.log('1. onSubmit pozvan');
     if (this.password() !== this.confirmPassword()) {
+      console.log('2. Lozinke se ne poklapaju');
       this.error.set('Lozinke se ne poklapaju');
       return;
     }
 
-    this.isLoading.set(true);
-    this.error.set('');
-
-    this.authService.register({
+    console.log('3. Dispatch register akcije', {
       firstName: this.firstName(),
       lastName: this.lastName(),
       email: this.email(),
       password: this.password(),
       role: this.role(),
-    }).subscribe({
-      next: () => {
-        this.router.navigate(['/login']);
-      },
-      error: (err) => {
-        this.error.set(err.error?.message || 'Greška pri registraciji');
-        this.isLoading.set(false);
-      },
-      complete: () => {
-        this.isLoading.set(false);
-      }
     });
+
+    this.isLoading.set(true);
+    this.error.set('');
+
+    this.store.dispatch(AuthAction.register({
+      firstName: this.firstName(),
+      lastName: this.lastName(),
+      email: this.email(),
+      role: this.role(),
+      password: this.password()
+    }))
   }
 }

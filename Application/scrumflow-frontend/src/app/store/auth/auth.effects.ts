@@ -37,20 +37,43 @@ export class AuthEffects {
         { dispatch: false }
     );
 
+    // register$ = createEffect(() =>
+    //     this.actions$.pipe(
+    //         ofType(AuthActions.register),
+    //         switchMap(({ firstName, lastName, email, password, role }) =>
+    //             this.authService.register({ firstName, lastName, email, password, role }).pipe(
+    //                 map((res: any) => AuthActions.registerSuccess({
+    //                     user: res.user,
+    //                     access_token: res.access_token
+    //                 })),
+    //                 catchError(err => of(AuthActions.registerFail({
+    //                     message: err.error?.message || 'Greska pri registraciji'
+    //                 })))
+    //             )
+    //         )
+    //     )
+    // );
+
     register$ = createEffect(() =>
         this.actions$.pipe(
             ofType(AuthActions.register),
-            switchMap(({ firstName, lastName, email, password, role }) =>
-                this.authService.register({ firstName, lastName, email, password, role }).pipe(
+            tap(() => console.log('4. Effect triggerovan')),
+            switchMap(({ firstName, lastName, email, password, role }) => {
+                console.log('5. HTTP request se salje');
+                return this.authService.register({ firstName, lastName, email, password, role }).pipe(
+                    tap(res => console.log('6. Response stigao:', res)),
                     map((res: any) => AuthActions.registerSuccess({
                         user: res.user,
                         access_token: res.access_token
                     })),
-                    catchError(err => of(AuthActions.registerFail({
-                        message: err.error?.message || 'Greska pri registraciji'
-                    })))
-                )
-            )
+                    catchError(err => {
+                        console.log('7. Greska:', err);
+                        return of(AuthActions.registerFail({
+                            message: err.error?.message || 'Greska pri registraciji'
+                        }));
+                    })
+                );
+            })
         )
     );
 

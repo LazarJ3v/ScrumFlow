@@ -7,6 +7,7 @@ import { taskReducer } from './store/task/task.reducer';
 import { provideHttpClient } from '@angular/common/http';
 import { provideEffects } from '@ngrx/effects';
 import { TaskEffects } from './store/task/task.effects';
+import { AuthEffects } from './store/auth/auth.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,6 +17,6 @@ export const appConfig: ApplicationConfig = {
       tasks: taskReducer
     }),
     provideHttpClient(),
-    provideEffects(TaskEffects),
+    provideEffects([AuthEffects, TaskEffects]),
   ],
 };

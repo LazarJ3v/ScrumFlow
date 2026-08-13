@@ -3,6 +3,8 @@ import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { RegisterDto } from './dto/register.dto';
+import { UserRole } from 'src/user/enums/user.enum';
 
 @Injectable()
 export class AuthService {
@@ -10,7 +12,6 @@ export class AuthService {
 
     async validateUser(email: string, password: string): Promise<any> {
         const user = await this.userService.findOne({ email });
-        //ovde treba hesirati password i uporediti sa user.passwordHash
         if (user) {
             const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
             if (isPasswordValid) {
@@ -28,18 +29,29 @@ export class AuthService {
             role: user.role,
         };
         return {
+            user,
             access_token: this.jwtService.sign(payload)
         }
     }
 
-    async registerUser(dto: CreateUserDto): Promise<any> {
+    async registerUser(dto: RegisterDto): Promise<any> {
         const checkUser = await this.userService.findOne({ email: dto.email });
         if (checkUser) {
             return null;
         }
-        //ovde treba hesirati password iz dto-a
-        const realPasswordHash = await bcrypt.hash(dto.passwordHash, 20);
-        const user = await this.userService.create({...dto, passwordHash: realPasswordHash});
+        const passwordHash = await bcrypt.hash(dto.password, 10);
+        const createDto: CreateUserDto = {
+            firstName: dto.firstName,
+            lastName: dto.lastName,
+            email: dto.email,
+            passwordHash: passwordHash,
+            role: UserRole[dto.role],
+            isActive: true,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            lastLoginAt: new Date()
+        }
+        const user = await this.userService.create(createDto);
         return this.loginUser(user);
     }
 }
