@@ -28,6 +28,8 @@ model User {
 
   assignedTasks Task[] @relation("TaskAssignee")
   createdTasks  Task[] @relation("TaskCreatedBy")
+  createdTeams  Team[]       @relation("TeamCreatedBy")
+  teamMembers   TeamMember[]
 }
 
 model Task {
@@ -53,6 +55,33 @@ model Task {
 
   createdById Int
   createdBy   User  @relation("TaskCreatedBy", fields: [createdById], references: [id])
+}
+
+model Team {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  joinCode    String   @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  createdById Int
+  createdBy   User @relation("TeamCreatedBy", fields: [createdById], references: [id])
+
+  members TeamMember[]
+}
+
+model TeamMember {
+  id       Int      @id @default(autoincrement())
+  joinedAt DateTime @default(now())
+
+  teamId Int
+  team   Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  @@unique([teamId, userId])
 }
 
 enum UserRole {
