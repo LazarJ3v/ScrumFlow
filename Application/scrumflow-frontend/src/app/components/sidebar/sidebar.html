@@ -1,0 +1,94 @@
+<aside class="sidebar">
+
+  <!-- LOGO -->
+  <div class="sidebar__logo" routerLink="/">
+    <span class="sidebar__logo-dot"></span>
+    ScrumFlow
+  </div>
+
+  <!-- NAV -->
+  <nav class="sidebar__nav">
+
+    <!-- TEAMS -->
+    <div class="sidebar__section-label">Teams</div>
+
+    @for (team of teams(); track team.id) {
+      <div class="sidebar__team">
+
+        <!-- TEAM HEADER -->
+        <button
+          class="sidebar__team-btn"
+          [class.active]="selectedTeam() === team.id"
+          (click)="selectTeam(team.id)">
+          <div class="sidebar__team-icon">
+            {{ team.name[0] }}
+          </div>
+          <span>{{ team.name }}</span>
+          <svg class="sidebar__chevron"
+            [class.rotated]="isTeamExpanded()"
+            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+
+        <!-- TEAM ITEMS -->
+        @if (isTeamExpanded() && selectedTeam() === team.id) {
+          <div class="sidebar__team-items">
+            <a class="sidebar__item" routerLink="/dashboard" routerLinkActive="active">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+                <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+              </svg>
+              Dashboard
+            </a>
+            <a class="sidebar__item" routerLink="/board" routerLinkActive="active">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                <line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/>
+              </svg>
+              Kanban Board
+            </a>
+            <a class="sidebar__item" routerLink="/backlog" routerLinkActive="active">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/>
+                <line x1="8" y1="18" x2="21" y2="18"/>
+                <line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/>
+                <line x1="3" y1="18" x2="3.01" y2="18"/>
+              </svg>
+              Product Backlog
+            </a>
+            <a class="sidebar__item" routerLink="/sprints" routerLinkActive="active">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              Sprints
+            </a>
+            <a class="sidebar__item" routerLink="/members" routerLinkActive="active">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+              Members
+            </a>
+          </div>
+        }
+      </div>
+    }
+
+  </nav>
+
+  <!-- USER PROFILE -->
+  <div class="sidebar__user">
+    <div class="sidebar__user-avatar">
+      {{ user()?.firstName?.[0] }}{{ user()?.lastName?.[0] }}
+    </div>
+    <div class="sidebar__user-info">
+      <span class="sidebar__user-name">{{ user()?.firstName }} {{ user()?.lastName }}</span>
+      <span class="sidebar__user-role">{{ user()?.role }}</span>
+    </div>
+  </div>
+
+</aside>

@@ -1,1 +1,56 @@
-<p>dashboard-page works!</p>
+<div class="dashboard">
+
+  <!-- SIDEBAR -->
+  <app-sidebar [user]="user()" />
+
+  <!-- MAIN CONTENT -->
+  <main class="dashboard__main">
+
+    <!-- HEADER -->
+    <div class="dashboard__header">
+      <div class="dashboard__greeting">
+        <h1>Dobrodošao, <span>{{ user()?.firstName }}</span></h1>
+        <!-- <p>{{ today() }}</p> -->
+      </div>
+      <div class="dashboard__role-badge" [attr.data-role]="user()?.role">
+        {{ user()?.role | titlecase }}
+      </div>
+    </div>
+
+    <!-- GRID -->
+    <div class="dashboard__grid">
+
+      <!-- SPRINT STATUS — svi vide -->
+      <div class="dashboard__card dashboard__card--wide">
+        <app-table-profile />
+      </div>
+
+      <!-- MOJI TASKOVI — samo Developer -->
+      @if (isDeveloper()) {
+        <div class="dashboard__card">
+          <!-- <app-my-tasks /> -->
+        </div>
+      }
+
+      <!-- BLOKADE — SM i Admin -->
+      @if (isScrumMaster() || isAdmin()) {
+        <div class="dashboard__card">
+          <!-- <app-blocked-tasks /> -->
+        </div>
+      }
+
+      <!-- TEAM MEMBERS — svi vide -->
+      <div class="dashboard__card">
+        <!-- <app-team-members /> -->
+      </div>
+
+      <!-- JOIN CODE — samo SM i Admin -->
+      @if (isScrumMaster() || isAdmin()) {
+        <div class="dashboard__card">
+          <app-join-code />
+        </div>
+      }
+
+    </div>
+  </main>
+</div>
