@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestj
 import { TeamService } from './team.service';
 import { CreateTeamDto } from './dto/create-team.dto';
 import { UpdateTeamDto } from './dto/update-team.dto';
+import { JoinTeamDto } from './dto/join-team.dto';
 
 @Controller('team')
 export class TeamController {
@@ -36,5 +37,10 @@ export class TeamController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.teamService.remove({ id: Number(id) });
+  }
+
+  @Post('join')
+  join(@Body() data: JoinTeamDto) {
+    return this.teamService.join(data);
   }
 }
