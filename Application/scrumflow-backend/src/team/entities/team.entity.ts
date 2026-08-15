@@ -1,3 +1,5 @@
+import { User } from "generated/prisma/browser";
+
 export class Team {
     id: string;
     name: string;
@@ -6,4 +8,5 @@ export class Team {
     createdAt: Date;
     UpdatedAt: Date;
     createdById: string;
+    members: User[];
 }

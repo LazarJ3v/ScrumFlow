@@ -1,0 +1,71 @@
+<!-- team-list.html -->
+
+<div class="team-list">
+
+  <!-- HEADER -->
+  <div class="team-list__header">
+    <div class="team-list__title-wrap">
+      <h2 class="team-list__title">Ukupno timova</h2>
+      <span class="team-list__count">{{ (teams | async)?.length ?? 0 }}</span>
+    </div>
+  </div>
+
+  <!-- LISTA -->
+  <div class="team-list__grid">
+    @for (team of (teams | async) ?? []; track team.id) {
+      <div class="team-list__card">
+
+        <!-- CARD HEADER -->
+        <div class="team-list__card-header">
+          <div class="team-list__card-icon">
+            {{ team.name[0] }}
+          </div>
+          <div class="team-list__card-info">
+            <h3 class="team-list__card-name">{{ team.name }}</h3>
+            @if (team.description) {
+              <p class="team-list__card-desc">{{ team.description }}</p>
+            }
+          </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="team-list__card-footer">
+          <span class="team-list__members">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+            {{ team.members.length }} članova
+          </span>
+          <button class="team-list__btn">
+            Otvori
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="5" y1="12" x2="19" y2="12"/>
+              <polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </button>
+        </div>
+
+      </div>
+    }
+
+    <!-- EMPTY STATE -->
+    @if ((teams | async)?.length === 0) {
+      <div class="team-list__empty">
+        <div class="team-list__empty-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </div>
+        <p class="team-list__empty-text">Nema timova</p>
+        <p class="team-list__empty-sub">Kreiraj novi tim ili se pridruži postojećem</p>
+      </div>
+    }
+
+  </div>
+</div>

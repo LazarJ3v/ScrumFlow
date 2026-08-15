@@ -28,7 +28,7 @@ export class TeamService {
     orderBy?: Prisma.TeamOrderByWithRelationInput
   }): Promise<Team[]> {
     const { skip, take, cursor, where, orderBy } = params;
-    return this.prisma.team.findMany({ skip, take, cursor, where, orderBy });
+    return this.prisma.team.findMany({ skip, take, cursor, where, orderBy, include: { members: true } });
   }
 
   async findOne(query: Prisma.TeamWhereUniqueInput): Promise<Team> {
@@ -61,7 +61,7 @@ export class TeamService {
       }
     });
 
-    if(alreadyInTeam) {
+    if (alreadyInTeam) {
       throw new ConflictException('Korisnik je vec clan ovog tima');
     }
 

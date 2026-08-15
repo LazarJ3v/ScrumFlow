@@ -35,20 +35,10 @@ export class Register {
   toggleConfirmPassword() { this.showConfirmPassword.set(!this.showConfirmPassword()); }
 
   onSubmit() {
-    console.log('1. onSubmit pozvan');
     if (this.password() !== this.confirmPassword()) {
-      console.log('2. Lozinke se ne poklapaju');
       this.error.set('Lozinke se ne poklapaju');
       return;
     }
-
-    console.log('3. Dispatch register akcije', {
-      firstName: this.firstName(),
-      lastName: this.lastName(),
-      email: this.email(),
-      password: this.password(),
-      role: this.role(),
-    });
 
     this.isLoading.set(true);
     this.error.set('');
