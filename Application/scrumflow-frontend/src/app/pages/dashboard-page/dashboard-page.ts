@@ -3,7 +3,6 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
 import { selectCurrentUser } from '../../store/auth/auth.selectors';
 import { SidebarComponent } from '../../components/sidebar/sidebar';
-import { TableProfile } from '../../components/table-profile/table-profile';
 import { JoinCode } from '../../components/join-code/join-code';
 import { TitleCasePipe } from '@angular/common';
 
@@ -12,7 +11,6 @@ import { TitleCasePipe } from '@angular/common';
   imports: [
     TitleCasePipe,
     SidebarComponent,
-    TableProfile,
     JoinCode
   ],
   templateUrl: './dashboard-page.html',

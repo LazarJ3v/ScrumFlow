@@ -1,6 +1,7 @@
-import { Component, input, signal } from '@angular/core';
+import { Component, inject, input, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { User } from '../../models/user.model';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-sidebar',
@@ -9,6 +10,7 @@ import { User } from '../../models/user.model';
   styleUrl: './sidebar.css'
 })
 export class SidebarComponent {
+  private store = inject(Store);
   user = input<any>();
 
   teams = signal([

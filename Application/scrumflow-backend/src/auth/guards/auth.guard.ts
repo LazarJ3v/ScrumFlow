@@ -11,6 +11,7 @@ export class AuthGuard implements CanActivate {
   }
 
   validateRequest(request: Request) {
+    //treba validirati da li te jwt access token ispravan i ako jeste vratiti true
     return true;
   }
 }
